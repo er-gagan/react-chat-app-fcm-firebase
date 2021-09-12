@@ -1,0 +1,9 @@
+.page-header {
+    background: #006A4E;
+    margin: 0;
+    padding: 20px 0 10px;
+    color: #FFFFFF;
+    position: inherit;
+    width: 100%;
+    z-index: 1
+}
