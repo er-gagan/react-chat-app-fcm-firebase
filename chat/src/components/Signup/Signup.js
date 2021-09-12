@@ -1,14 +1,37 @@
 import React, { useState } from 'react'
-
+import firebase from '../../Credentials/Firebase/firebaseCredential'
+import { notify } from '../../notify';
+import { useHistory } from "react-router-dom";
 const Signup = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [confPassword, setConfPassword] = useState("")
     const [email, setEmail] = useState("")
+    const history = useHistory()
 
-    const submitBtn = (e) => {
+    const submitBtn = async (e) => {
         e.preventDefault()
-        console.log(username, password, confPassword, email)
+        // console.log(username, password, confPassword, email)
+        if (password === confPassword) {
+            try {
+                await firebase.auth().createUserWithEmailAndPassword(email, password).then((user) => {
+                    user.user.updateProfile({ displayName: username }).then(() => {
+                        user.user.sendEmailVerification().then(() => {
+                            notify("info", `We sent a mail to ${email} for email verification! Please verify your email! If email ${email} is invallid then the request is automatically killed!`, 8000)
+                            history.push('/login')
+                        }).catch(error => {
+                            notify("error", `We not verify your email ${email}! Please try again`, 5000)
+                        })
+                    })
+                }).catch(error => {
+                    notify("error", error.message, 4000)
+                })
+            } catch (error) {
+                notify("error", `Something went wrong, ${error.message}`, 5000)
+            }
+        } else {
+            notify("error", "Password and Confirm Password is not same", 4000)
+        }
     }
     return (
         <div>
