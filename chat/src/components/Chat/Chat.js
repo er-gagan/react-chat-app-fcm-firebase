@@ -1,16 +1,24 @@
 import firebase from '../../Credentials/Firebase/firebaseCredential'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 import './Chat.css'
-import ScrollableFeed from 'react-scrollable-feed'
-
 
 const Chat = () => {
   const [messageText, setMessageText] = useState("")
   const [allMsg, setAllMsg] = useState([])
   const [email, setEmail] = useState("")
   const [username, setUsername] = useState("")
+
+  const messageRef = useRef(null)
+
+  useEffect(() => {
+    if (messageRef.current) {
+      messageRef.current.scrollIntoView(
+        { behavior: 'smooth', block: 'end', inline: 'nearest' }
+      )
+    }
+  })
 
   useEffect(() => {
     // get user data
@@ -39,51 +47,57 @@ const Chat = () => {
     displayChats()
   }, [])
 
-  const sc = () => {
-    document.getElementById("msgBox").scrollTop = document.getElementById("msgBox").scrollHeight
-  }
 
   const submitBtn = (e) => {
     e.preventDefault()
-    firebase.firestore().collection("chats").add({
+    const MsgObj = {
       date: new Date(),
       email: email,
       username: username,
       msg: messageText
-    })
+    }
+    // setAllMsg([...allMsg, MsgObj])
+    firebase.firestore().collection("chats").add(MsgObj)
     setMessageText("")
     document.getElementById("messageInput").focus()
-
     displayChats()
-    sc()
   }
 
   return (
     <div>
       {/* <div className="main"> */}
       <div className="container ">
-        <div id="msgBox">
-          <SimpleBar style={{ maxHeight: 450, padding: "10px" }}>
-          <ScrollableFeed forceScroll={true}>
-          {allMsg.length > 0 ? allMsg.map((msg, i) => {
-            return (<div key={i}>
-              {msg.email !== email ? <>
-                <div className="chat-log__item">
-                  <h3 className="chat-log__author">{msg.username} <small>03:40</small></h3>
-                  <div className="chat-log__message">{msg.msg}</div>
-                </div>
-              </> : <>
-                <div className="chat-log__item chat-log__item--own">
-                  <h3 className="chat-log__author">{msg.username} <small>03:40</small></h3>
-                  <div className="chat-log__message">{msg.msg}</div>
-                </div>
-              </>}
-            </div>)
-          }) : ""}
+        <SimpleBar style={{ maxHeight: 450, padding: "10px" }}>
+          <div>
+            {allMsg.length > 0 ? allMsg.map((msg, i) => {
+              return (<div key={i}>
+                {msg.email !== email ? <>
+                  <div class="d-flex flex-row bd-highlight mb-3">
+                    <div class="p-2 bd-highlight">
+                      <div className="chat-log__item">
+                        <h3 className="chat-log__author">{msg.username} <small>03:40</small></h3>
+                        <div className="chat-log__message">{msg.msg}</div>
+                      </div>
 
-          </ScrollableFeed>
-          </SimpleBar>
-        </div>
+                    </div>
+                  </div>
+                </> : <>
+                  <div class="d-flex flex-row-reverse bd-highlight">
+                    <div class="p-2 bd-highlight">
+                      <div className="chat-log__item chat-log__item--own">
+                        <h3 className="chat-log__author">{msg.username} <small>03:40</small></h3>
+                        <div className="chat-log__message">{msg.msg}</div>
+                      </div>
+
+                    </div>
+                  </div>
+                </>}
+              </div>)
+            }) : ""}
+          </div>
+          <div ref={messageRef} >
+          </div>
+        </SimpleBar>
       </div>
       <div className="chat-form">
         <div className="container ">
