@@ -56,7 +56,7 @@ const Chat = () => {
       username: username,
       msg: messageText
     }
-    // setAllMsg([...allMsg, MsgObj])
+    
     firebase.firestore().collection("chats").add(MsgObj)
     setMessageText("")
     document.getElementById("messageInput").focus()
@@ -72,8 +72,8 @@ const Chat = () => {
             {allMsg.length > 0 ? allMsg.map((msg, i) => {
               return (<div key={i}>
                 {msg.email !== email ? <>
-                  <div class="d-flex flex-row bd-highlight mb-3">
-                    <div class="p-2 bd-highlight">
+                  <div className="d-flex flex-row bd-highlight mb-3">
+                    <div className="p-2 bd-highlight">
                       <div className="chat-log__item">
                         <h3 className="chat-log__author">{msg.username} <small>03:40</small></h3>
                         <div className="chat-log__message">{msg.msg}</div>
@@ -82,8 +82,8 @@ const Chat = () => {
                     </div>
                   </div>
                 </> : <>
-                  <div class="d-flex flex-row-reverse bd-highlight">
-                    <div class="p-2 bd-highlight">
+                  <div className="d-flex flex-row-reverse bd-highlight">
+                    <div className="p-2 bd-highlight">
                       <div className="chat-log__item chat-log__item--own">
                         <h3 className="chat-log__author">{msg.username} <small>03:40</small></h3>
                         <div className="chat-log__message">{msg.msg}</div>
