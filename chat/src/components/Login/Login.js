@@ -16,14 +16,14 @@ const Login = () => {
         // dispatch(deleteAllTodos([]))
         dispatch(addToken(null))
         history.push("/login");
-        notify("error", "Something went wrong, Please check your internet and credentials and verify email!", 5000)
+        notify("error", "Something went wrong, Please check your internet and credentials and verify email!", 3000)
     }, [dispatch, history])
 
     const logIn = useCallback((token) => {
         localStorage.setItem("token", token)
         dispatch(addToken(token))
         history.push("/")
-        notify("success", "You have successfully logged in", 5000)
+        notify("success", "You have successfully logged in", 2000)
     }, [dispatch, history])
 
     const submitBtn = async (e) => {

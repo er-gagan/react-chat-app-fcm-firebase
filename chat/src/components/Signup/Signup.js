@@ -17,14 +17,14 @@ const Signup = () => {
                 await firebase.auth().createUserWithEmailAndPassword(email, password).then((user) => {
                     user.user.updateProfile({ displayName: username }).then(() => {
                         user.user.sendEmailVerification().then(() => {
-                            notify("info", `We sent a mail to ${email} for email verification! Please verify your email! If email ${email} is invallid then the request is automatically killed!`, 8000)
+                            notify("info", `We sent a mail to ${email} for email verification! Please verify your email! If email ${email} is invallid then the request is automatically killed!`, 4000)
                             history.push('/login')
                         }).catch(error => {
-                            notify("error", `We not verify your email ${email}! Please try again`, 5000)
+                            notify("error", `We not verify your email ${email}! Please try again`, 3000)
                         })
                     })
                 }).catch(error => {
-                    notify("error", error.message, 4000)
+                    notify("error", error.message, 3000)
                 })
             } catch (error) {
                 notify("error", `Something went wrong, ${error.message}`, 5000)
